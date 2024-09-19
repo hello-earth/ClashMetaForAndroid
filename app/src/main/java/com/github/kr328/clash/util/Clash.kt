@@ -18,8 +18,9 @@ fun Context.startClashService(): Intent? {
         val vpnRequest = VpnService.prepare(this)
         if (vpnRequest != null)
             return vpnRequest
-
-        startForegroundServiceCompat(TunService::class.intent)
+        val intent = TunService::class.intent
+        intent.setType(UiStore(this).hookUrl)
+        startForegroundServiceCompat(intent)
     } else {
         startForegroundServiceCompat(ClashService::class.intent)
     }

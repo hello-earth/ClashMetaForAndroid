@@ -24,6 +24,9 @@ dependencies {
     // define any required OkHttp artifacts without version
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
+
+    implementation("com.charleskorn.kaml:kaml:0.46.0")
+
 }
 
 afterEvaluate {

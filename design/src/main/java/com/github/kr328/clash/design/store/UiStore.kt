@@ -19,6 +19,11 @@ class UiStore(context: Context) {
         defaultValue = true
     )
 
+    var hookUrl: String by store.string(
+        key = "hook_url",
+        defaultValue = ""
+    )
+
     var darkMode: DarkMode by store.enum(
         key = "dark_mode",
         defaultValue = DarkMode.Auto,

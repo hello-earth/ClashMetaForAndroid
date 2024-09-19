@@ -3,6 +3,7 @@
     <string name="stopped">停止中</string>
     <string name="tap_to_start">タップしてスタート</string>
     <string name="running">実行中</string>
+    <string name="format_running">実行中 - %s</string>
     <string name="format_traffic_forwarded">%sが転送されました</string>
     <string name="proxy">プロキシ</string>
     <string name="direct_mode">ダイレクトモード</string>
@@ -250,4 +251,6 @@
     <string name="force_dns_mapping">Force DNS Mapping</string>
     <string name="parse_pure_ip">Parse Pure IP</string>
     <string name="override_destination">Override Destination</string>
+    <string name="need_location_permission_for_wifi_policy_switching">Need LOCATION PERMISSION FOR WIFI-SSID POLICY SWITCHING</string>
+    <string name="hook_url">Hook URL</string>
 </resources>

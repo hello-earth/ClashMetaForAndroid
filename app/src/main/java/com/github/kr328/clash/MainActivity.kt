@@ -1,6 +1,11 @@
 package com.github.kr328.clash
 
+import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.design.MainDesign
@@ -10,19 +15,38 @@ import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.withClash
 import com.github.kr328.clash.util.withProfile
 import com.github.kr328.clash.core.bridge.*
+import com.github.kr328.clash.design.databinding.DesignAboutBinding
+import com.github.kr328.clash.design.util.layoutInflater
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import java.io.IOException
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class MainActivity : BaseActivity<MainDesign>() {
+
+    private val PERMISSION_REQUEST_CODE = 1111
+
     override suspend fun main() {
         val design = MainDesign(this)
 
         setContentDesign(design)
 
         design.fetch()
+        withClash { design.setCheckingIP("N/A") }
+
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), PERMISSION_REQUEST_CODE)
+        }
 
         val ticker = ticker(TimeUnit.SECONDS.toMillis(1))
 
@@ -59,6 +83,7 @@ class MainActivity : BaseActivity<MainDesign>() {
                             startActivity(HelpActivity::class.intent)
                         MainDesign.Request.OpenAbout ->
                             design.showAbout(queryAppVersionName())
+                        MainDesign.Request.CheckIP -> design.checkIP()
                     }
                 }
                 if (clashRunning) {
@@ -129,4 +154,45 @@ class MainActivity : BaseActivity<MainDesign>() {
             packageManager.getPackageInfo(packageName, 0).versionName + "\n" + Bridge.nativeCoreVersion().replace("_", "-")
         }
     }
+
+
+    suspend fun MainDesign.checkIP() {
+        if (!clashRunning) { return }
+        var url = "https://api.ipify.org"
+        val client = OkHttpClient()
+        val request = Request.Builder().url(url).build()
+        val myIP = checkIPUsingSuspendCoroutine(client, request)
+        withClash { setCheckingIP(myIP) }
+    }
+
+    suspend fun checkIPUsingSuspendCoroutine(client: OkHttpClient, request: Request) : String{
+        return suspendCoroutine { cont ->
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    cont.resumeWithException(e)
+                }
+                override fun onResponse(call: Call, response: Response) {
+                    response.body?.string()?.let { body ->
+                        cont.resume(body)
+                    }
+                }
+            })
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            PERMISSION_REQUEST_CODE -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // 权限被用户同意，可以进行定位操作
+                } else {
+//                    Toast.makeText(this, R.string.need_location_permission_for_wifi_policy_switching, Toast.LENGTH_LONG).show()
+//                    ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), PERMISSION_REQUEST_CODE)
+                }
+                return
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
 }

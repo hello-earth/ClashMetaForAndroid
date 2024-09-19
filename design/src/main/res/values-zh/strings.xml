@@ -60,6 +60,7 @@
     <string name="routing_via_vpn_service">通过 VpnService 自动路由所有系统流量</string>
     <string name="rule_mode">规则模式</string>
     <string name="running">运行中</string>
+    <string name="format_running">运行中 - %s</string>
     <string name="settings">设置</string>
     <string name="show_traffic">显示流量</string>
     <string name="show_traffic_summary">在通知中自动刷新流量</string>
@@ -99,7 +100,7 @@
     <string name="always_dark">总是暗黑模式</string>
     <string name="always_light">总是明亮模式</string>
     <string name="service">服务</string>
-    <string name="accept_http_content">仅接受 http(s) 和 content 类型</string>
+    <string name="accept_http_content">仅接受 http(s)</string>
     <string name="at_least_15_minutes">至少 15 分钟</string>
     <string name="override">覆写</string>
     <string name="general">常规</string>
@@ -255,4 +256,6 @@
     <string name="force_dns_mapping">Force DNS Mapping</string>
     <string name="parse_pure_ip">Parse Pure IP</string>
     <string name="override_destination">Override Destination</string>
+    <string name="need_location_permission_for_wifi_policy_switching">需要定位权限用于根据WiFi名称进行节点切换的策略</string>
+    <string name="hook_url">启动成功后回调地址</string>
 </resources>

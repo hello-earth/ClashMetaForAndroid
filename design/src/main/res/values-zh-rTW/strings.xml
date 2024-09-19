@@ -60,6 +60,7 @@
     <string name="routing_via_vpn_service">通過 VpnService 自動轉送所有作業系統流量</string>
     <string name="rule_mode">規則模式</string>
     <string name="running">執行中</string>
+    <string name="format_running">執行中 - %s</string>
     <string name="settings">設定</string>
     <string name="show_traffic">顯示流量</string>
     <string name="show_traffic_summary">在通知中自動重新整理流量</string>
@@ -98,7 +99,7 @@
     <string name="always_dark">深色</string>
     <string name="always_light">淺色</string>
     <string name="service">服務</string>
-    <string name="accept_http_content">僅接受 http(s) 和 content 類型</string>
+    <string name="accept_http_content">僅接受 http(s)</string>
     <string name="at_least_15_minutes">至少 15 分鐘</string>
     <string name="override">覆寫</string>
     <string name="general">一般</string>
@@ -154,6 +155,8 @@
     <string name="format_days_ago">%d 天前</string>
     <string name="format_months_ago">%d 月前</string>
     <string name="format_years_ago">%d 年前</string>
+    <string name="allow_ipv6">通过 VpnService 代理Ipv6流量</string>
+    <string name="allow_ipv6_summary">通过 VpnService 代理Ipv6流量</string>
     <string name="system_proxy">作業系統 Proxy</string>
     <string name="system_proxy_summary">為 VpnService 附加 HTTP Proxy</string>
     <string name="dont_modify">不修改</string>
@@ -247,4 +250,6 @@
     <string name="force_dns_mapping">Force DNS Mapping</string>
     <string name="parse_pure_ip">Parse Pure IP</string>
     <string name="override_destination">Override Destination</string>
+    <string name="need_location_permission_for_wifi_policy_switching">Need LOCATION PERMISSION FOR WIFI-SSID POLICY SWITCHING</string>
+    <string name="hook_url">启动成功后回调地址</string>
 </resources>

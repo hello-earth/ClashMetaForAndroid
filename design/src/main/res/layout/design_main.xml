@@ -12,6 +12,9 @@
             name="forwarded"
             type="String" />
         <variable
+            name="proxyip"
+            type="String" />
+        <variable
             name="mode"
             type="String" />
         <variable
@@ -55,8 +58,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:minHeight="@dimen/main_top_banner_height"
+                    android:layout_marginBottom="@dimen/main_padding_horizontal"
                     android:orientation="horizontal">
 
                     <FrameLayout
@@ -71,6 +75,7 @@
                     </FrameLayout>
 
                     <TextView
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/application_name"
@@ -86,7 +91,31 @@
                     app:cardBackgroundColor="@{clashRunning ? colorClashStarted : colorClashStopped}"
                     app:icon="@{clashRunning ? @drawable/ic_outline_check_circle : @drawable/ic_outline_not_interested}"
                     app:subtext="@{clashRunning ? @string/format_traffic_forwarded(forwarded) : @string/tap_to_start}"
-                    app:text="@{clashRunning ? @string/running : @string/stopped}" />
+                    app:text="@{clashRunning ?  @string/format_running(proxyip) : @string/stopped}" >
+
+                    <RelativeLayout
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:gravity="center"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:onClick="@{() -> self.request(Request.CheckIP)}"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:id="@+id/ip_test_view"
+                            android:layout_width="@dimen/item_tailing_component_size"
+                            android:layout_height="@dimen/item_tailing_component_size"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/delay_test"
+                            android:padding="@dimen/toolbar_image_action_padding"
+                            android:src="@drawable/ic_baseline_flash_on" />
+
+                    </RelativeLayout>
+
+
+                </com.github.kr328.clash.design.view.LargeActionCard>
 
                 <com.github.kr328.clash.design.view.LargeActionCard
                     android:layout_width="match_parent"

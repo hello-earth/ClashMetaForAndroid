@@ -23,6 +23,7 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
         OpenSettings,
         OpenHelp,
         OpenAbout,
+        CheckIP,
     }
 
     private val binding = DesignMainBinding
@@ -40,6 +41,20 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
     suspend fun setClashRunning(running: Boolean) {
         withContext(Dispatchers.Main) {
             binding.clashRunning = running
+        }
+        if (!binding.clashRunning) {
+            withContext(Dispatchers.Main) {
+                binding.proxyip = "N/A"
+            }
+        }
+    }
+
+    suspend fun setCheckingIP(myip: String) {
+        if (myip.split(".").size != 4 && binding.proxyip?.isNotEmpty() == true) {
+            return
+        }
+        withContext(Dispatchers.Main) {
+            binding.proxyip = myip
         }
     }
 

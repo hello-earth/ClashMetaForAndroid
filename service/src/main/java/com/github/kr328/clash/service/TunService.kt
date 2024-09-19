@@ -2,9 +2,13 @@ package com.github.kr328.clash.service
 
 import android.annotation.TargetApi
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import com.github.kr328.clash.common.store.asStoreProvider
 import android.net.ProxyInfo
 import android.net.VpnService
+import android.net.wifi.WifiManager
 import android.os.Build
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.constants.Components
@@ -15,6 +19,7 @@ import com.github.kr328.clash.service.model.AccessControlMode
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.service.util.cancelAndJoinBlocking
 import com.github.kr328.clash.service.util.parseCIDR
+import com.github.kr328.clash.service.util.reportMe
 import com.github.kr328.clash.service.util.sendClashStarted
 import com.github.kr328.clash.service.util.sendClashStopped
 import kotlinx.coroutines.*
@@ -25,6 +30,7 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
         get() = this
 
     private var reason: String? = null
+    private var mNetworkBroadcastReceiver: NetworkBroadcastReceiver? = null
 
     private val runtime = clashRuntime {
         val store = ServiceStore(self)
@@ -80,6 +86,7 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
         }
     }
 
+
     override fun onCreate() {
         super.onCreate()
 
@@ -92,11 +99,28 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
         StaticNotificationModule.notifyLoadingNotification(this)
 
         runtime.launch()
+
+        registerReceiver()
+
+    }
+
+    private fun registerReceiver() {
+        if (mNetworkBroadcastReceiver != null) { return }
+        try {
+            var filter = IntentFilter()
+            mNetworkBroadcastReceiver = NetworkBroadcastReceiver()
+            filter.setPriority(Integer.MAX_VALUE)
+            filter.addAction(android.net.ConnectivityManager.CONNECTIVITY_ACTION)
+            filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION)
+            registerReceiver(mNetworkBroadcastReceiver, filter)
+        } catch (e: Exception) {
+            Log.e("Create clash runtime: ${e.message}", e)
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         sendClashStarted()
-
+        reportMe(intent?.type)
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -108,6 +132,10 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
         sendClashStopped(reason)
 
         cancelAndJoinBlocking()
+
+        if (mNetworkBroadcastReceiver!=null){
+            unregisterReceiver(mNetworkBroadcastReceiver)
+        }
 
         Log.i("TunService destroyed: ${reason ?: "successfully"}")
 
