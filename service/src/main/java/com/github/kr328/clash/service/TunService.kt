@@ -2,10 +2,8 @@ package com.github.kr328.clash.service
 
 import android.annotation.TargetApi
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.github.kr328.clash.common.store.asStoreProvider
 import android.net.ProxyInfo
 import android.net.VpnService
 import android.net.wifi.WifiManager
@@ -19,7 +17,6 @@ import com.github.kr328.clash.service.model.AccessControlMode
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.service.util.cancelAndJoinBlocking
 import com.github.kr328.clash.service.util.parseCIDR
-import com.github.kr328.clash.service.util.reportMe
 import com.github.kr328.clash.service.util.sendClashStarted
 import com.github.kr328.clash.service.util.sendClashStopped
 import kotlinx.coroutines.*
@@ -119,7 +116,6 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        reportMe(intent?.type)
         sendClashStarted()
         return super.onStartCommand(intent, flags, startId)
     }

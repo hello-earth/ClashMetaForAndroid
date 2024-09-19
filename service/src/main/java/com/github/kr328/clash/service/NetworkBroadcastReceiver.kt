@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.net.wifi.WifiManager
 import android.text.TextUtils
 import com.charleskorn.kaml.Yaml
@@ -13,7 +12,6 @@ import com.charleskorn.kaml.YamlList
 import com.charleskorn.kaml.YamlMap
 import com.charleskorn.kaml.YamlNode
 import com.charleskorn.kaml.yamlMap
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.service.util.processingDir
 import com.github.kr328.clash.service.util.selectProxy
 import java.io.BufferedReader
