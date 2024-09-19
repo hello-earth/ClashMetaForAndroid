@@ -12,15 +12,13 @@ import com.github.kr328.clash.service.TunService
 import com.github.kr328.clash.service.util.sendBroadcastSelf
 
 fun Context.startClashService(): Intent? {
+    reportMe(UiStore(this).hookUrl)
     val startTun = UiStore(this).enableVpn
-
     if (startTun) {
         val vpnRequest = VpnService.prepare(this)
         if (vpnRequest != null)
             return vpnRequest
-        val intent = TunService::class.intent
-        intent.setType(UiStore(this).hookUrl)
-        startForegroundServiceCompat(intent)
+        startForegroundServiceCompat(TunService::class.intent)
     } else {
         startForegroundServiceCompat(ClashService::class.intent)
     }
