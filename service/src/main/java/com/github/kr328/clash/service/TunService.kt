@@ -119,8 +119,8 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        sendClashStarted()
         reportMe(intent?.type)
+        sendClashStarted()
         return super.onStartCommand(intent, flags, startId)
     }
 
