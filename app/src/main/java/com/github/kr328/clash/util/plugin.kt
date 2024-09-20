@@ -22,7 +22,7 @@ fun reportMe(url : String?){
                 Log.d("onFailure: Failed to execute request")
             }
             override fun onResponse(call: Call, response: Response) {
-
+                Log.d(response.body.toString())
             }
         })
     } catch (e: Exception) {
